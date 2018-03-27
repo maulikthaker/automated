@@ -6,16 +6,16 @@ import javax.mail.internet.*;
 public class SendMail {
 
 		public void sendfromEC2(String subject, String body)throws Exception {
-		    final String FROM = "mafatyo00@gmail.com";   // Replace with your "From" address. This address must be verified.
-		    final String TO = "maulikthaker@gmail.com";  // Replace with a "To" address. If your account is still in the 
+		    final String FROM = "xx@gmail.com";   // Replace with your "From" address. This address must be verified.
+		    final String TO = "xx@gmail.com";  // Replace with a "To" address. If your account is still in the 
 		                                                       // sandbox, this address must be verified.
 		    
 		    String BODY = body;
 		    String SUBJECT = subject;
 		    
 		    // Supply your SMTP credentials below. Note that your SMTP credentials are different from your AWS credentials.
-		    final String SMTP_USERNAME = "AKIAIGZJIGMSKYHW2UCQ";  // Replace with your SMTP username.
-		    final String SMTP_PASSWORD = "AgpZ38NRcByxClz/2k0StYjq0Dt7YFpgrwTOxtnDUQ0X";  // Replace with your SMTP password.
+// 		    final String SMTP_USERNAME = "AKIAIGZJIGMSKYHW2UCQ";  // Replace with your SMTP username.
+// 		    final String SMTP_PASSWORD = "AgpZ38NRcByxClz/2k0StYjq0Dt7YFpgrwTOxtnDUQ0X";  // Replace with your SMTP password.
 		    
 		    // Amazon SES SMTP host name. This example uses the US West (Oregon) region.
 		    final String HOST = "email-smtp.us-west-2.amazonaws.com";    
@@ -81,9 +81,9 @@ public class SendMail {
 		
 		 public static void send(String sub,String msg){
 			 
-			 String from = "mafatyo00@gmail.com";
-			 String password = "Mithoon1!";
-			 String to = "maulikthaker@gmail.com";
+			 String from = "xx@gmail.com";
+			 String password = "xx";
+			 String to = "xx";
 			 
 			 
 	          //Get properties object    
@@ -115,9 +115,9 @@ public class SendMail {
 	    }  
 		
     	public void sendFromGMail(String subject, String body) {
-	    	String from = "mafatyo00";
-			String pass = "Mithoon1!"; 
-			String[] to = {"maulikthaker@gmail.com"};			
+	    	String from = "xx";
+			String pass = "xx"; 
+			String[] to = {"xx@gmail.com"};			
 									
 			
 	        Properties props = System.getProperties();
