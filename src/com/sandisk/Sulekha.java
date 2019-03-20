@@ -7,6 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,7 +28,72 @@ public class Sulekha {
 	boolean upcoming = false;
 	
 	
-	public void upcoming() throws IOException {
+	private String getdate(String input2) {
+		switch(input2) {
+        case "january":
+        case "jan":
+            input2 = "01";
+        break;
+
+        case "febuary":
+        case "feb":
+            input2 = "02";
+        break;
+
+        case "march":
+        case "mar":
+            input2 = "03";
+        break;
+
+        case "april":
+        case "apr":
+            input2 = "04";
+        break;
+
+        case "may":
+            input2 = "05";
+        break;
+
+        case "june":
+        case "jun":
+            input2 = "06";
+        break;
+
+        case "july":
+        case "jul":
+            input2 = "07";
+        break;
+
+        case "august":
+        case "aug":
+            input2 = "08";
+        break;
+
+        case "september":
+        case "sep":
+        case "sept":
+            input2 = "09";
+        break;
+
+        case "october":
+        case "oct":
+            input2 = "10";
+        break;
+
+        case "november":
+        case "nov":
+            input2 = "11";
+        break;
+
+        case "december":
+        case "dec":
+            input2 = "12";
+        break;
+        }
+		return input2;
+	}
+	
+	public void upcoming() throws IOException, ParseException {
 
 		doc1.append("<h2> UpComing Events </h2>");
 		String file = "/tmp/slkh";
@@ -52,12 +121,27 @@ public class Sulekha {
 			Elements popular = doc.select("article.tktwrp");		
 			for(Element n : popular){
 				
+				
+				
+				
 //				
 				String primKey = n.select("div.tktdecs h3 a").attr("title");
 				String month = n.select("div.tktdatetme span.tktmonth").text();
 				String time = n.select("div.tktdatetme span.tkttime").text();
 				String day = n.select("div.tktdatetme span.tktdate").text();
-				String event = primKey + " : "+ month + ", " + time + " " + day; 
+				String event = primKey + " : "+ month + ", " + time + " " + day;
+				
+				SimpleDateFormat displayFormat = new SimpleDateFormat("HHmm");
+				SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mma");
+			    Date date = parseFormat.parse(time);
+			    
+				String fromtime = "T" + displayFormat.format(date) + "00";
+				String fromdate = "2019"+ getdate(month.split("\\s")[0].toLowerCase()) + month.split("\\s")[1]  + fromtime;
+				String todate = "2019"+ getdate(month.split("\\s")[0].toLowerCase()) + month.split("\\s")[1]  +"T235959";
+				String callink = "https://calendar.google.com/calendar/r/eventedit?" +
+									"&text=" + primKey +	
+									"&dates=" + fromdate + "/" + todate;									 
+//									"location=Garage+Boston+-+20+Linden+Street+-+Allston,+MA+02134";
 				Boolean exists = false;
 				for (String s : stringArray) {
 					if (s.contains(primKey)) {
@@ -75,9 +159,17 @@ public class Sulekha {
 				Element td = tr.appendElement("td");
 				
 				Element a = new Element(Tag.valueOf("a"), "");
-				a.appendElement("p").appendText(event);
-				a.appendElement("br");
+				a.appendText(event + " | ");
+				
+				
+				Element cal = new Element(Tag.valueOf("a"),"link");
+				cal.attr("href",callink);
+				cal.text("Add to Cal");
+				
+				
+				a.appendChild(cal);
 				td.appendChild(a);
+				
 				
 				out.append(primKey + "\n");
 			}
@@ -133,12 +225,43 @@ public class Sulekha {
 					continue;
 				}
 				this.south = true;
+				
+				SimpleDateFormat displayFormat = new SimpleDateFormat("HHmm");
+				SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
+			    Date date = new Date();;
+				try {
+					date = parseFormat.parse(time.substring(5,13));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			    
+				String fromtime = "T" + displayFormat.format(date) + "00";
+				String fromdate = "2019"+ getdate(month.toLowerCase()) + day  + fromtime;
+				String todate = "2019"+ getdate(month.toLowerCase()) + day  +"T235959";
+				String callink = "https://calendar.google.com/calendar/r/eventedit?" +
+									"&text=" + primKey +	
+									"&dates=" + fromdate + "/" + todate;									 
+//									"location=Garage+Boston+-+20+Linden+Street+-+Allston,+MA+02134";
+
+				
+				
 				Element tr = doc1.appendElement("tr");
 				Element td = tr.appendElement("td");
+
+				Element cal = new Element(Tag.valueOf("a"),"link");
+				cal.attr("href",callink);
+				cal.text("Add to Cal | ");
+
 				
 				Element a = new Element(Tag.valueOf("a"), "");
-				a.attr("href",href).attr("style","text-decoration:none;");			
+				a.attr("href",href).attr("style","text-decoration:none;");
+				a.appendChild(cal);
 				a.appendElement("p").appendText(event);
+
+				
+
+				
 				a.appendElement("img").attr("src", img).attr("width", "300px");
 				a.appendElement("br");
 				
@@ -182,7 +305,7 @@ public class Sulekha {
 		
 	
 	
-	public void sendMail() throws IOException{
+	public void sendMail() throws IOException, ParseException{
 		SendMail s = new SendMail();
 		Calendar c = Calendar.getInstance();
 		
@@ -195,7 +318,7 @@ public class Sulekha {
 		southbay();
 
 		if(this.south == true || this.upcoming == true) {
-			s.sendFromGMail("Sulekha Events : " + c.getTime().toString(), doc1.toString());
+			s.sendFromGMail("Sulekha Events : " + c.getTime().toString(), doc1.toString(), "Personal Sulekha");
 		}
 		
 //		if (doc1.children().size() > 0) {
@@ -207,7 +330,7 @@ public class Sulekha {
 		
 	}
 
-	public static void main(String[] args) throws IOException, InterruptedException {
+	public static void main(String[] args) throws IOException, InterruptedException, ParseException {
 //		while(true){
 			Sulekha fp = new Sulekha();
 			fp.sendMail();						

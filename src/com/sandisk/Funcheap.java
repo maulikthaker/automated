@@ -45,7 +45,8 @@ public class Funcheap {
 			for(Element n : popular){
 				
 				String primKey = n.text();
-				String link = n.select("a").attr("href");
+//				String link = n.select("a").attr("href");
+				String link = "http://www.google.com/calendar/event?location=428+11th+Street,+San+Francisco,+CA&action=TEMPLATE&sprop=name%3AModern+Web;&sprop=website%3Ahttps%3A%2F%2Fwww.meetup.com%2Fmodernweb%2Fevents%2F257967875&details=For+full+details%2C+including+the+address%2C+and+to+RSVP+see%3A+https%3A%2F%2Fwww.meetup.com%2Fmodernweb%2Fevents%2F257967875%0A%0AHappy+New+Year%21%0A%0AWe%27re+super+excited+to+have+you+at+our+next+Modern+Web+%2B+GDGSV+%2B+Angular+MTV+event%21...&text=4th+Annual+National+Tater+Tot+Day+|+SoMa+StrEat+Food&dates=20190202T023000Z%2F20190202T050000Z";
 				Boolean exists = false;
 				for (String s : stringArray) {
 					if (s.contains(primKey)) {
@@ -174,7 +175,7 @@ public class Funcheap {
 		southbay();
 
 		if(this.popular == true || this.south == true) {
-			s.sendFromGMail("SF Fun Events : " + c.getTime().toString(), doc1.toString());
+			s.sendFromGMail("SF Fun Events : " + c.getTime().toString(), doc1.toString(), "SF Fun Cheap Events");
 		}
 		
 //		if (doc1.children().size() > 0) {
